@@ -1,0 +1,20 @@
+*********************************************************************************
+This log was generated with "glslvalidate".
+A tool that checks shaders for valid syntax using the 3Dlabs open source
+GLSL parser. http://www.3dlabs.com/support/developer/ogl2/downloads
+*********************************************************************************
+
+Parsing vertex shader 'noise.vert'....
+Success.
+
+Parsing fragment shader 'noise.frag'....
+Success.
+
+Parsing fragment shader 'sky.frag'....
+Success.
+
+Parsing fragment shader 'water.frag'....
+Success.
+
+Parsing fragment shader 'wood.frag'....
+Success.
