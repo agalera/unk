@@ -29,8 +29,6 @@ import java.nio.IntBuffer;
 
 import utility.*;
 
-
-
 public class MainCode {
 	//private static float[] lightPosition = {-12.19f, 1.36f, 1.45f, 110.1f};
 	private List<Integer> List_models_public = new ArrayList<Integer>();
@@ -577,18 +575,291 @@ public class MainCode {
                 
                 if (Keyboard.getEventKey() == Keyboard.KEY_R)
     	        {
-    	        	mapa_temporal[chunk_x][chunk_y].set_blocked(x_map,y_map,false);
-    	        	mapa_temporal[chunk_x][chunk_y].down(x_map,y_map);
+                	if (x_map > 0 && x_map < 15 && y_map > 0 && y_map < 15 )
+                	{
+                		mapa_temporal[chunk_x][chunk_y].down_select(x_map-1,y_map-1,1);
+                		mapa_temporal[chunk_x][chunk_y].down_select(x_map,y_map-1,2);
+                		mapa_temporal[chunk_x][chunk_y].down_select(x_map+1,y_map-1,3);
+                		mapa_temporal[chunk_x][chunk_y].down_select(x_map-1,y_map,4);
+                		mapa_temporal[chunk_x][chunk_y].down_select(x_map,y_map,5);
+                		mapa_temporal[chunk_x][chunk_y].down_select(x_map+1,y_map,6);
+                		mapa_temporal[chunk_x][chunk_y].down_select(x_map-1,y_map+1,7);
+                		mapa_temporal[chunk_x][chunk_y].down_select(x_map,y_map+1,8);
+                		mapa_temporal[chunk_x][chunk_y].down_select(x_map+1,y_map+1,9);
+                	}
+                	else
+                	{
+                		if(x_map == 0)
+	                	{
+                			mapa_temporal[chunk_x-1][chunk_y].down_select(15,y_map,4);
+                			mapa_temporal[chunk_x][chunk_y].down_select(x_map+1,y_map,6);
+	                		mapa_temporal[chunk_x-1][chunk_y].change_down();
+	                	}
+                		else if(x_map == 15)
+	                	{
+	                		mapa_temporal[chunk_x][chunk_y].down_select(x_map-1,y_map,4);
+	                		mapa_temporal[chunk_x+1][chunk_y].down_select(0,y_map,6);
+	                		mapa_temporal[chunk_x+1][chunk_y].change_down();
+	                	}
+                		else
+	                	{
+	                		mapa_temporal[chunk_x][chunk_y].down_select(x_map-1,y_map,4);
+	                		mapa_temporal[chunk_x][chunk_y].down_select(x_map+1,y_map,6);
+	                	}
+	                	if(y_map == 0)
+	                	{
+	                		mapa_temporal[chunk_x][chunk_y-1].down_select(x_map,15,2);
+	                		mapa_temporal[chunk_x][chunk_y].down_select(x_map,y_map+1,8);
+	                		mapa_temporal[chunk_x][chunk_y-1].change_down();
+	                	}
+	                	else if(y_map == 15)
+	                	{
+	                		mapa_temporal[chunk_x][chunk_y].down_select(x_map,y_map-1,2);
+	                		mapa_temporal[chunk_x][chunk_y+1].down_select(x_map,0,8);
+	                		mapa_temporal[chunk_x][chunk_y+1].change_down();
+	                	}
+	                	else
+	                	{
+	                		mapa_temporal[chunk_x][chunk_y].down_select(x_map,y_map-1,2);
+	                		mapa_temporal[chunk_x][chunk_y].down_select(x_map,y_map+1,8);
+	                	}
+	                	if (x_map == 0 && y_map != 15 && y_map != 0)
+	                	{
+	                		mapa_temporal[chunk_x-1][chunk_y].down_select(15,y_map-1,1);
+	                		mapa_temporal[chunk_x][chunk_y].down_select(x_map+1,y_map-1,3);
+	                		
+	                		mapa_temporal[chunk_x-1][chunk_y].down_select(15,y_map+1,7);
+	                		mapa_temporal[chunk_x][chunk_y].down_select(x_map+1,y_map+1,9);
+	                		
+	                		mapa_temporal[chunk_x-1][chunk_y].change_down();
+	                	}
+	                	if (x_map == 15 && y_map != 15 && y_map != 0)
+	                	{
+	                		mapa_temporal[chunk_x][chunk_y].down_select(x_map-1,y_map-1,1);
+	                		mapa_temporal[chunk_x+1][chunk_y].down_select(0,y_map-1,3);
+	                		
+	                		mapa_temporal[chunk_x][chunk_y].down_select(x_map-1,y_map+1,7);
+	                		mapa_temporal[chunk_x+1][chunk_y].down_select(0,y_map+1,9);
+	                		
+	                		mapa_temporal[chunk_x+1][chunk_y].change_down();
+	                	}
+	                	if (y_map == 0 && x_map != 15 && x_map != 0)
+	                	{
+	                		mapa_temporal[chunk_x][chunk_y-1].down_select(x_map-1,15,1);
+	                		mapa_temporal[chunk_x][chunk_y-1].down_select(x_map+1,15,3);
+	                		
+	                		mapa_temporal[chunk_x][chunk_y].down_select(x_map-1,y_map+1,7);
+	                		mapa_temporal[chunk_x][chunk_y].down_select(x_map+1,y_map+1,9);
+	                		
+	                		mapa_temporal[chunk_x][chunk_y-1].change_down();
+	                	}
+	                	if (y_map == 15 && x_map != 15 && x_map != 0)
+	                	{
+	                		mapa_temporal[chunk_x][chunk_y].down_select(x_map-1,y_map-1,1);
+	                		mapa_temporal[chunk_x][chunk_y].down_select(x_map+1,y_map-1,3);
+	                		
+	                		mapa_temporal[chunk_x][chunk_y+1].down_select(x_map-1,0,7);
+	                		mapa_temporal[chunk_x][chunk_y+1].down_select(x_map+1,0,9);
+	                		
+	                		mapa_temporal[chunk_x][chunk_y+1].change_down();
+	                	}
+	                	if(x_map == 0 && y_map == 0)
+	                	{
+	                		mapa_temporal[chunk_x-1][chunk_y-1].down_select(15,15,1);
+	                		mapa_temporal[chunk_x][chunk_y-1].down_select(x_map+1,15,3);
+	                		
+	                		mapa_temporal[chunk_x-1][chunk_y].down_select(15,y_map+1,7);
+	                		mapa_temporal[chunk_x][chunk_y].down_select(x_map+1,y_map+1,9);
+	                		
+	                		mapa_temporal[chunk_x-1][chunk_y-1].change_down();
+	                		mapa_temporal[chunk_x][chunk_y-1].change_down();
+	                		mapa_temporal[chunk_x-1][chunk_y].change_down();
+	                	}
+	                	if(x_map == 15 && y_map == 15)
+	                	{
+	                		mapa_temporal[chunk_x][chunk_y].down_select(x_map-1,y_map-1,1);
+	                		mapa_temporal[chunk_x+1][chunk_y].down_select(0,y_map-1,3);
+	                		
+	                		mapa_temporal[chunk_x][chunk_y+1].down_select(x_map-1,0,7);
+	                		mapa_temporal[chunk_x+1][chunk_y+1].down_select(0,0,9);
+	                		
+	                		mapa_temporal[chunk_x+1][chunk_y].change_down();
+	                		mapa_temporal[chunk_x+1][chunk_y+1].change_down();
+	                		mapa_temporal[chunk_x][chunk_y+1].change_down();
+	                	}
+	                	if(x_map == 15 && y_map == 0)
+	                	{
+	                		mapa_temporal[chunk_x][chunk_y-1].down_select(x_map-1,15,1);
+	                		mapa_temporal[chunk_x+1][chunk_y-1].down_select(0,15,3);
+	                		
+	                		mapa_temporal[chunk_x][chunk_y].down_select(x_map-1,y_map+1,7);
+	                		mapa_temporal[chunk_x+1][chunk_y].down_select(0,y_map+1,9);
+	                		
+	                		mapa_temporal[chunk_x][chunk_y-1].change_down();
+	                		mapa_temporal[chunk_x+1][chunk_y-1].change_down();
+	                		mapa_temporal[chunk_x+1][chunk_y].change_down();
+	                	}
+	                	if(x_map == 0 && y_map == 15)
+	                	{
+	                		mapa_temporal[chunk_x-1][chunk_y].down_select(15,y_map-1,1);
+	                		mapa_temporal[chunk_x][chunk_y].down_select(x_map+1,y_map-1,3);
+	                		
+	                		mapa_temporal[chunk_x-1][chunk_y+1].down_select(15,0,7);
+	                		mapa_temporal[chunk_x][chunk_y+1].down_select(x_map+1,0,9);
+	                		
+	                		mapa_temporal[chunk_x-1][chunk_y+1].change_down();
+	                		mapa_temporal[chunk_x-1][chunk_y].change_down();
+	                		mapa_temporal[chunk_x][chunk_y+1].change_down();
+	                	}
+	                	mapa_temporal[chunk_x][chunk_y].down_select(x_map,y_map,5);
+                	}
+    	        	//mapa_temporal[chunk_x][chunk_y].down_select(x_map,y_map);
+    	        	mapa_temporal[chunk_x][chunk_y].change_down();
     	        	mapa_temporal[chunk_x][chunk_y].set_Tiled(x_map,y_map,2);
     	        	
     	        }
     	        else if(Keyboard.getEventKey() == Keyboard.KEY_T)
     	        {
-    	        	//System.out.println("x_map" + x_map);
-    	        	//System.out.println("y_map" + y_map);
-    	        	//System.out.println("z_map" + z_map);
-    	        	mapa_temporal[chunk_x][chunk_y].set_blocked(x_map,y_map,false);
-    	        	mapa_temporal[chunk_x][chunk_y].up(x_map,y_map);
+    	        	if (x_map > 0 && x_map < 15 && y_map > 0 && y_map < 15 )
+                	{
+                		mapa_temporal[chunk_x][chunk_y].up_select(x_map-1,y_map-1,1);
+                		mapa_temporal[chunk_x][chunk_y].up_select(x_map,y_map-1,2);
+                		mapa_temporal[chunk_x][chunk_y].up_select(x_map+1,y_map-1,3);
+                		mapa_temporal[chunk_x][chunk_y].up_select(x_map-1,y_map,4);
+                		mapa_temporal[chunk_x][chunk_y].up_select(x_map,y_map,5);
+                		mapa_temporal[chunk_x][chunk_y].up_select(x_map+1,y_map,6);
+                		mapa_temporal[chunk_x][chunk_y].up_select(x_map-1,y_map+1,7);
+                		mapa_temporal[chunk_x][chunk_y].up_select(x_map,y_map+1,8);
+                		mapa_temporal[chunk_x][chunk_y].up_select(x_map+1,y_map+1,9);
+                	}
+                	else
+                	{
+                		if(x_map == 0)
+	                	{
+                			mapa_temporal[chunk_x-1][chunk_y].up_select(15,y_map,4);
+                			mapa_temporal[chunk_x][chunk_y].up_select(x_map+1,y_map,6);
+	                		mapa_temporal[chunk_x-1][chunk_y].change_up();
+	                	}
+                		else if(x_map == 15)
+	                	{
+	                		mapa_temporal[chunk_x][chunk_y].up_select(x_map-1,y_map,4);
+	                		mapa_temporal[chunk_x+1][chunk_y].up_select(0,y_map,6);
+	                		mapa_temporal[chunk_x+1][chunk_y].change_up();
+	                	}
+                		else
+	                	{
+	                		mapa_temporal[chunk_x][chunk_y].up_select(x_map-1,y_map,4);
+	                		mapa_temporal[chunk_x][chunk_y].up_select(x_map+1,y_map,6);
+	                	}
+	                	if(y_map == 0)
+	                	{
+	                		mapa_temporal[chunk_x][chunk_y-1].up_select(x_map,15,2);
+	                		mapa_temporal[chunk_x][chunk_y].up_select(x_map,y_map+1,8);
+	                		mapa_temporal[chunk_x][chunk_y-1].change_up();
+	                	}
+	                	else if(y_map == 15)
+	                	{
+	                		mapa_temporal[chunk_x][chunk_y].up_select(x_map,y_map-1,2);
+	                		mapa_temporal[chunk_x][chunk_y+1].up_select(x_map,0,8);
+	                		mapa_temporal[chunk_x][chunk_y+1].change_up();
+	                	}
+	                	else
+	                	{
+	                		mapa_temporal[chunk_x][chunk_y].up_select(x_map,y_map-1,2);
+	                		mapa_temporal[chunk_x][chunk_y].up_select(x_map,y_map+1,8);
+	                	}
+	                	if (x_map == 0 && y_map != 15 && y_map != 0)
+	                	{
+	                		mapa_temporal[chunk_x-1][chunk_y].up_select(15,y_map-1,1);
+	                		mapa_temporal[chunk_x][chunk_y].up_select(x_map+1,y_map-1,3);
+	                		
+	                		mapa_temporal[chunk_x-1][chunk_y].up_select(15,y_map+1,7);
+	                		mapa_temporal[chunk_x][chunk_y].up_select(x_map+1,y_map+1,9);
+	                		
+	                		mapa_temporal[chunk_x-1][chunk_y].change_up();
+	                	}
+	                	if (x_map == 15 && y_map != 15 && y_map != 0)
+	                	{
+	                		mapa_temporal[chunk_x][chunk_y].up_select(x_map-1,y_map-1,1);
+	                		mapa_temporal[chunk_x+1][chunk_y].up_select(0,y_map-1,3);
+	                		
+	                		mapa_temporal[chunk_x][chunk_y].up_select(x_map-1,y_map+1,7);
+	                		mapa_temporal[chunk_x+1][chunk_y].up_select(0,y_map+1,9);
+	                		
+	                		mapa_temporal[chunk_x+1][chunk_y].change_up();
+	                	}
+	                	if (y_map == 0 && x_map != 15 && x_map != 0)
+	                	{
+	                		mapa_temporal[chunk_x][chunk_y-1].up_select(x_map-1,15,1);
+	                		mapa_temporal[chunk_x][chunk_y-1].up_select(x_map+1,15,3);
+	                		
+	                		mapa_temporal[chunk_x][chunk_y].up_select(x_map-1,y_map+1,7);
+	                		mapa_temporal[chunk_x][chunk_y].up_select(x_map+1,y_map+1,9);
+	                		
+	                		mapa_temporal[chunk_x][chunk_y-1].change_up();
+	                	}
+	                	if (y_map == 15 && x_map != 15 && x_map != 0)
+	                	{
+	                		mapa_temporal[chunk_x][chunk_y].up_select(x_map-1,y_map-1,1);
+	                		mapa_temporal[chunk_x][chunk_y].up_select(x_map+1,y_map-1,3);
+	                		
+	                		mapa_temporal[chunk_x][chunk_y+1].up_select(x_map-1,0,7);
+	                		mapa_temporal[chunk_x][chunk_y+1].up_select(x_map+1,0,9);
+	                		
+	                		mapa_temporal[chunk_x][chunk_y+1].change_up();
+	                	}
+	                	if(x_map == 0 && y_map == 0)
+	                	{
+	                		mapa_temporal[chunk_x-1][chunk_y-1].up_select(15,15,1);
+	                		mapa_temporal[chunk_x][chunk_y-1].up_select(x_map+1,15,3);
+	                		
+	                		mapa_temporal[chunk_x-1][chunk_y].up_select(15,y_map+1,7);
+	                		mapa_temporal[chunk_x][chunk_y].up_select(x_map+1,y_map+1,9);
+	                		
+	                		mapa_temporal[chunk_x-1][chunk_y-1].change_up();
+	                		mapa_temporal[chunk_x][chunk_y-1].change_up();
+	                		mapa_temporal[chunk_x-1][chunk_y].change_up();
+	                	}
+	                	if(x_map == 15 && y_map == 15)
+	                	{
+	                		mapa_temporal[chunk_x][chunk_y].up_select(x_map-1,y_map-1,1);
+	                		mapa_temporal[chunk_x+1][chunk_y].up_select(0,y_map-1,3);
+	                		
+	                		mapa_temporal[chunk_x][chunk_y+1].up_select(x_map-1,0,7);
+	                		mapa_temporal[chunk_x+1][chunk_y+1].up_select(0,0,9);
+	                		
+	                		mapa_temporal[chunk_x+1][chunk_y].change_up();
+	                		mapa_temporal[chunk_x+1][chunk_y+1].change_up();
+	                		mapa_temporal[chunk_x][chunk_y+1].change_up();
+	                	}
+	                	if(x_map == 15 && y_map == 0)
+	                	{
+	                		mapa_temporal[chunk_x][chunk_y-1].up_select(x_map-1,15,1);
+	                		mapa_temporal[chunk_x+1][chunk_y-1].up_select(0,15,3);
+	                		
+	                		mapa_temporal[chunk_x][chunk_y].up_select(x_map-1,y_map+1,7);
+	                		mapa_temporal[chunk_x+1][chunk_y].up_select(0,y_map+1,9);
+	                		
+	                		mapa_temporal[chunk_x][chunk_y-1].change_up();
+	                		mapa_temporal[chunk_x+1][chunk_y-1].change_up();
+	                		mapa_temporal[chunk_x+1][chunk_y].change_up();
+	                	}
+	                	if(x_map == 0 && y_map == 15)
+	                	{
+	                		mapa_temporal[chunk_x-1][chunk_y].up_select(15,y_map-1,1);
+	                		mapa_temporal[chunk_x][chunk_y].up_select(x_map+1,y_map-1,3);
+	                		
+	                		mapa_temporal[chunk_x-1][chunk_y+1].up_select(15,0,7);
+	                		mapa_temporal[chunk_x][chunk_y+1].up_select(x_map+1,0,9);
+	                		
+	                		mapa_temporal[chunk_x-1][chunk_y+1].change_up();
+	                		mapa_temporal[chunk_x-1][chunk_y].change_up();
+	                		mapa_temporal[chunk_x][chunk_y+1].change_up();
+	                	}
+	                	mapa_temporal[chunk_x][chunk_y].up_select(x_map,y_map,5);
+                	}
+    	        	//mapa_temporal[chunk_x][chunk_y].up_select(x_map,y_map);
+    	        	mapa_temporal[chunk_x][chunk_y].change_up();
     	        	mapa_temporal[chunk_x][chunk_y].set_Tiled(x_map,y_map,1);
     	        	
     	        }

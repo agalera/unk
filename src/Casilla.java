@@ -51,7 +51,10 @@ public class Casilla {
 		return this.TileID;
 	}
 	/*TILED*/
-	
+	public float get_Media()
+	{
+		return (vertices[0] + vertices[2])/2f;
+	}
 	/*OBJECTS*/
 	public void add_Tree(int type)
 	{

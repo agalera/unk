@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
+import org.lwjgl.LWJGLException;
 //import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 //import org.lwjgl.util.vector.Vector2f;
@@ -99,7 +100,7 @@ public class chunk {
             //System.out.println("id: "+id_title);
             //System.out.println("X: "+(texture_info_temp[0]/10f)+" Y: "+(texture_info_temp[1]/10f));
                 
-            GL11.glBegin(GL11.GL_QUADS);
+            GL11.glBegin(GL11.GL_TRIANGLES);
                 GL11.glTexCoord2f(textureXOffset, textureYOffset);
                 GL11.glVertex3f(bx, by, vertices[0]);
                 
@@ -112,14 +113,25 @@ public class chunk {
                 GL11.glTexCoord2f(textureXOffset, textureYOffset + textureHeight);
                 GL11.glVertex3f(bx,by + 0.16f, vertices[3]);
             GL11.glEnd();
-            
+            GL11.glBegin(GL11.GL_TRIANGLES);
+	            GL11.glTexCoord2f(textureXOffset, textureYOffset);
+	            GL11.glVertex3f(bx, by, vertices[0]);
+	            
+	            
+	            GL11.glTexCoord2f(textureXOffset + textureWidth, textureYOffset + textureHeight);
+	            GL11.glVertex3f(bx + 0.16f, by + 0.16f, vertices[2]);
+	
+	            GL11.glTexCoord2f(textureXOffset, textureYOffset + textureHeight);
+	            GL11.glVertex3f(bx,by + 0.16f, vertices[3]);
+            GL11.glEnd();
             //GL11.glDisable(GL11.GL_TEXTURE_2D);
         
     }
-	private void Create_object(float bx,float by, int id_title)
+	private void Create_object(float bx,float by, float z, int id_title)
     {
             // R,G,B,A Set The Color To Blue One Time Only
-            GL11.glTranslatef(bx+0.08f, by+0.08f, 0f);
+
+            GL11.glTranslatef(bx+0.08f, by+0.08f, z+0.01f);
             GL11.glRotatef(-rotation, 0f, 0f, 1f);
             GL11.glRotatef(45f, 1f, 0f, 0f);
             
@@ -128,8 +140,8 @@ public class chunk {
     	    int[] texture_info_temp = {id_title, 0};
             float textureXOffset = (texture_info_temp[0]/8f);
             float textureYOffset = (texture_info_temp[1]/8f);
-            float textureHeight  = 0.125f;
-            float textureWidth   = 0.125f;
+            float textureHeight  = 0.124f;
+            float textureWidth   = 0.124f;
 
             //System.out.println("id: "+id_title);
             //System.out.println("X: "+(texture_info_temp[0]/10f)+" Y: "+(texture_info_temp[1]/10f));
@@ -152,7 +164,7 @@ public class chunk {
             //GL11.glDisable(GL11.GL_TEXTURE_2D);
 	        GL11.glRotatef(45f, -1f, 0f, 0f);
 	        GL11.glRotatef(-rotation, 0f, 0f, -1f);
-	        GL11.glTranslatef(-bx-0.08f, -by-0.08f, 0f);
+	        GL11.glTranslatef(-bx-0.08f, -by-0.08f, -z-0.01f);
 	        
     }
 	private void generate_DisplayList(int type_map)
@@ -256,7 +268,7 @@ public class chunk {
             		// pasar parametros, as� que lo posicionamos y rotamos antes de pintarlo, y volvemos a recolocar
             		// las posiciones para evitar que se descojone todo
             		
-            		Create_object(positX,positY,4);
+            		Create_object(positX,positY,casilla[i][v].get_Media(),4);
             		//GL11.glCallList(List_models_public.get(0));
                    
                     //Create_tile_object(positX,positY,4);
@@ -294,11 +306,11 @@ public class chunk {
             		// al ser un array de posiciones, no hay que recorrerlo con un for, lo cual no se le puede
             		// pasar parametros, as� que lo posicionamos y rotamos antes de pintarlo, y volvemos a recolocar
             		// las posiciones para evitar que se descojone todo
-            		GL11.glTranslatef(positX+0.08f, positY+0.08f, 0.0f);
+            		GL11.glTranslatef(positX+0.08f, positY+0.08f, casilla[i][v].get_Media());
             		
             		GL11.glCallList(List_models_public.get(0));
                                        
-                    GL11.glTranslatef(-(positX+0.08f), -(positY+0.08f), -( 0.0f));
+                    GL11.glTranslatef(-(positX+0.08f), -(positY+0.08f), -(casilla[i][v].get_Media()));
                     //Create_tile_object(positX,positY,4);
             	}
             
@@ -369,6 +381,7 @@ public class chunk {
 	{
 		System.out.println("add trees-> x:"+ x +" y: "+y);
 		casilla[x_map2][y_map2].add_Tree(item_id);
+		this.require_generate_displaylist.add(2);
 	}
 	public boolean get_blocked(int temp_x_map, int temp_y_map)
 	{
@@ -386,33 +399,82 @@ public class chunk {
 		//generate_DisplayList();
 		
 	}
-	public void up(int x_map, int y_map) {
-		// TODO Auto-generated method stub
-		
-		casilla[x_map-1][y_map-1].up(false,false,true,false);
-		casilla[x_map][y_map-1].up(false,false,true,true);
-		casilla[x_map+1][y_map-1].up(false,false,false,true);
-		
-		casilla[x_map-1][y_map].up(false,true,true,false);
-		casilla[x_map][y_map].up(true,true,true,true);
-		casilla[x_map+1][y_map].up(true,false,false,true);
-		
-		casilla[x_map-1][y_map+1].up(false,true,false,false);
-		casilla[x_map][y_map+1].up(true,true,false,false);
-		casilla[x_map+1][y_map+1].up(true,false,false,false);
+	public void change_up() {
+		this.require_generate_displaylist.add(0);
+		this.require_generate_displaylist.add(1);
+		this.require_generate_displaylist.add(2);
 		
 	}
-	public void down(int x_map, int y_map) {
-		casilla[x_map-1][y_map-1].down(false,false,true,false);
-		casilla[x_map][y_map-1].down(false,false,true,true);
-		casilla[x_map+1][y_map-1].down(false,false,false,true);
-		
-		casilla[x_map-1][y_map].down(false,true,true,false);
-		casilla[x_map][y_map].down(true,true,true,true);
-		casilla[x_map+1][y_map].down(true,false,false,true);
-		
-		casilla[x_map-1][y_map+1].down(false,true,false,false);
-		casilla[x_map][y_map+1].down(true,true,false,false);
-		casilla[x_map+1][y_map+1].down(true,false,false,false);
+	public void change_down() {
+		this.require_generate_displaylist.add(0);
+		this.require_generate_displaylist.add(1);
+		this.require_generate_displaylist.add(2);
+	}
+	public void up_select(int x_map, int y_map, int pos)
+	{
+		switch(pos)
+		{
+		case 1:
+			casilla[x_map][y_map].up(false,false,true,false);
+			break;
+		case 2:
+			casilla[x_map][y_map].up(false,false,true,true);
+			break;
+		case 3:
+			casilla[x_map][y_map].up(false,false,false,true);
+			break;
+		case 4:
+			casilla[x_map][y_map].up(false,true,true,false);
+			break;
+		case 5:
+			casilla[x_map][y_map].up(true,true,true,true);
+			break;
+		case 6:
+			casilla[x_map][y_map].up(true,false,false,true);
+			break;
+		case 7:
+			casilla[x_map][y_map].up(false,true,false,false);
+			break;
+		case 8:
+			casilla[x_map][y_map].up(true,true,false,false);
+			break;
+		case 9:
+			casilla[x_map][y_map].up(true,false,false,false);
+			break;
+		}
+
+	}
+	public void down_select(int x_map, int y_map, int pos)
+	{
+		switch(pos)
+		{
+		case 1:
+			casilla[x_map][y_map].down(false,false,true,false);
+			break;
+		case 2:
+			casilla[x_map][y_map].down(false,false,true,true);
+			break;
+		case 3:
+			casilla[x_map][y_map].down(false,false,false,true);
+			break;
+		case 4:
+			casilla[x_map][y_map].down(false,true,true,false);
+			break;
+		case 5:
+			casilla[x_map][y_map].down(true,true,true,true);
+			break;
+		case 6:
+			casilla[x_map][y_map].down(true,false,false,true);
+			break;
+		case 7:
+			casilla[x_map][y_map].down(false,true,false,false);
+			break;
+		case 8:
+			casilla[x_map][y_map].down(true,true,false,false);
+			break;
+		case 9:
+			casilla[x_map][y_map].down(true,false,false,false);
+			break;
+		}
 	}
 }
