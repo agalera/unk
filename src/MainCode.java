@@ -51,8 +51,8 @@ public class MainCode {
     float rotation = 0;
     int acely = 0;
     int acelx = 0;
-    int ResWidth = 1920;
-    int ResHeight = 1080;
+    int ResWidth = 1660;
+    int ResHeight = 1050;
     /** time at last frame */
     long lastFrame;
     int x_map;

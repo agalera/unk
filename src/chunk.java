@@ -92,10 +92,10 @@ public class chunk {
 	     	GL11.glColor3f(1f, 1f, 1f);
      	
     	    int[] texture_info_temp = {id_title, 0};
-            float textureXOffset = (texture_info_temp[0]/8f);
-            float textureYOffset = (texture_info_temp[1]/8f);
-            float textureHeight  = 0.124f;
-            float textureWidth   = 0.124f;
+            float textureXOffset = (texture_info_temp[0]/16f);
+            float textureYOffset = (texture_info_temp[1]/16f);
+            float textureHeight  = 0.062f;
+            float textureWidth   = 0.062f;
 
             //System.out.println("id: "+id_title);
             //System.out.println("X: "+(texture_info_temp[0]/10f)+" Y: "+(texture_info_temp[1]/10f));
@@ -138,10 +138,10 @@ public class chunk {
             // draw quad
             //GL11.glBindTexture(GL11.GL_TEXTURE_2D, tex);
     	    int[] texture_info_temp = {id_title, 0};
-            float textureXOffset = (texture_info_temp[0]/8f);
-            float textureYOffset = (texture_info_temp[1]/8f);
-            float textureHeight  = 0.124f;
-            float textureWidth   = 0.124f;
+            float textureXOffset = (texture_info_temp[0]/16f);
+            float textureYOffset = (texture_info_temp[1]/16f);
+            float textureHeight  = 0.062f;
+            float textureWidth   = 0.062f;
 
             //System.out.println("id: "+id_title);
             //System.out.println("X: "+(texture_info_temp[0]/10f)+" Y: "+(texture_info_temp[1]/10f));
