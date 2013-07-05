@@ -7,6 +7,8 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL20;
+import org.lwjgl.opengl.GL32;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -17,9 +19,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
@@ -51,8 +55,8 @@ public class MainCode {
     float rotation = 0;
     int acely = 0;
     int acelx = 0;
-    int ResWidth = 1660;
-    int ResHeight = 1050;
+    int ResWidth = 1920;
+    int ResHeight = 1080;
     /** time at last frame */
     long lastFrame;
     int x_map;
@@ -77,6 +81,7 @@ public class MainCode {
     int sprite_timming=0;
     private int bagDisplayList;
     int timefire = 0;
+    int shaderProgram = 0;
     public void start()
     {
         try {
@@ -86,7 +91,7 @@ public class MainCode {
             e.printStackTrace();
             System.exit(0);
         }
-
+        
         tex = setupTextures("assets/stGrid1.png");
         bag_auv = setupTextures("src/bag_auv.png");
         texture_player = setupTextures("assets/player.png");
@@ -149,25 +154,25 @@ public class MainCode {
 	
     	if (x != 0)
     	{
-    	    mapa_temporal[x-1][y] = new chunk(x-1,y,tex, List_models_public);
-    	    mapa_temporal[x-1][1+y] = new chunk(x-1,1+y,tex, List_models_public);
+    	    mapa_temporal[x-1][y] = new chunk(x-1,y,tex, List_models_public, rotation);
+    	    mapa_temporal[x-1][1+y] = new chunk(x-1,1+y,tex, List_models_public, rotation);
     	}
     	if (x != 0 && y != 0)
     	{
-    		mapa_temporal[x-1][y-1] = new chunk(x-1,y-1,tex, List_models_public);
+    		mapa_temporal[x-1][y-1] = new chunk(x-1,y-1,tex, List_models_public, rotation);
     	}
     	if (y != 0)
     	{
-	    	mapa_temporal[x][y-1] = new chunk(x,y-1,tex, List_models_public);
-		    mapa_temporal[1+x][y-1] = new chunk(1+x,y-1,tex, List_models_public);
+	    	mapa_temporal[x][y-1] = new chunk(x,y-1,tex, List_models_public, rotation);
+		    mapa_temporal[1+x][y-1] = new chunk(1+x,y-1,tex, List_models_public, rotation);
     	}
 
-    	mapa_temporal[x][y] = new chunk(x,y,tex, List_models_public);
-    	mapa_temporal[1+x][y] = new chunk(1+x,y,tex, List_models_public);
+    	mapa_temporal[x][y] = new chunk(x,y,tex, List_models_public, rotation);
+    	mapa_temporal[1+x][y] = new chunk(1+x,y,tex, List_models_public, rotation);
 
 
-    	mapa_temporal[x][1+y] = new chunk(x,1+y,tex, List_models_public);
-    	mapa_temporal[1+x][1+y] = new chunk(1+x,1+y,tex, List_models_public);
+    	mapa_temporal[x][1+y] = new chunk(x,1+y,tex, List_models_public, rotation);
+    	mapa_temporal[1+x][1+y] = new chunk(1+x,1+y,tex, List_models_public, rotation);
     }
     private void load_map(int x, int y)
     {
@@ -178,49 +183,49 @@ public class MainCode {
 		{
 		    if (mapa_temporal[x-1][y] == null)
 		    {
-		    	mapa_temporal[x-1][y] = new chunk(x-1,y,tex, List_models_public);
+		    	mapa_temporal[x-1][y] = new chunk(x-1,y,tex, List_models_public, rotation);
 		    }
 		    if (mapa_temporal[x-1][1+y] == null)
 		    {
-		    	mapa_temporal[x-1][1+y] = new chunk(x-1,1+y,tex, List_models_public);
+		    	mapa_temporal[x-1][1+y] = new chunk(x-1,1+y,tex, List_models_public, rotation);
 		    }
 		}
 		if (x != 0 && y != 0)
 		{
 			if (mapa_temporal[x-1][y-1] == null)
 			{
-				mapa_temporal[x-1][y-1] = new chunk(x-1,y-1,tex, List_models_public);
+				mapa_temporal[x-1][y-1] = new chunk(x-1,y-1,tex, List_models_public, rotation);
 			}
 		}
 		if (y != 0)
 		{
 	    	if (mapa_temporal[x][y-1] == null)
 	    	{
-	    		mapa_temporal[x][y-1] = new chunk(x,y-1,tex, List_models_public);
+	    		mapa_temporal[x][y-1] = new chunk(x,y-1,tex, List_models_public, rotation);
 	    	}
 		    if (mapa_temporal[1+x][y-1] == null)
 		    {
-		    	mapa_temporal[1+x][y-1] = new chunk(1+x,y-1,tex, List_models_public);
+		    	mapa_temporal[1+x][y-1] = new chunk(1+x,y-1,tex, List_models_public, rotation);
 		    }
 		}
 	
 		if (mapa_temporal[x][y] == null)
 		{
-			mapa_temporal[x][y] = new chunk(x,y,tex, List_models_public);
+			mapa_temporal[x][y] = new chunk(x,y,tex, List_models_public, rotation);
 		}
 		if (mapa_temporal[1+x][y] == null)
 		{
-			mapa_temporal[1+x][y] = new chunk(1+x,y,tex, List_models_public);
+			mapa_temporal[1+x][y] = new chunk(1+x,y,tex, List_models_public, rotation);
 		}
 	
 	
 		if (mapa_temporal[x][1+y] == null)
 		{
-			mapa_temporal[x][1+y] = new chunk(x,1+y,tex, List_models_public);
+			mapa_temporal[x][1+y] = new chunk(x,1+y,tex, List_models_public, rotation);
 		}
 		if (mapa_temporal[1+x][1+y] == null)
 		{
-			mapa_temporal[1+x][1+y] = new chunk(1+x,1+y,tex, List_models_public);
+			mapa_temporal[1+x][1+y] = new chunk(1+x,1+y,tex, List_models_public, rotation);
 		}
     }
     private void unload_map(int x, int y)
@@ -363,6 +368,30 @@ public class MainCode {
         GL11.glEnable(GL11.GL_COLOR_MATERIAL);
         GL11.glColorMaterial(GL11.GL_FRONT, GL11.GL_DIFFUSE);
     }
+	public void recalculate_rotation()
+	{
+		if (chunk_x != 0)
+    	{
+        	mapa_temporal[chunk_x-1][chunk_y].set_rotation(rotation);
+	    	mapa_temporal[chunk_x-1][1+chunk_y].set_rotation(rotation);
+    	}
+        if (chunk_y != 0)
+    	{
+	    	mapa_temporal[chunk_x][chunk_y-1].set_rotation(rotation);
+	    	mapa_temporal[1+chunk_x][chunk_y-1].set_rotation(rotation);
+    	}
+        if (chunk_x != 0 && chunk_y != 0)
+    	{
+	    	mapa_temporal[chunk_x-1][chunk_y-1].set_rotation(rotation);
+    	}
+
+        mapa_temporal[chunk_x][chunk_y].set_rotation(rotation);
+        
+    	mapa_temporal[1+chunk_x][chunk_y].set_rotation(rotation);
+    	
+    	mapa_temporal[chunk_x][1+chunk_y].set_rotation(rotation);
+    	mapa_temporal[1+chunk_x][1+chunk_y].set_rotation(rotation);
+	}
     public void update(int delta) {
         // rotate quad
 	   
@@ -397,6 +426,26 @@ public class MainCode {
             {
                 acelx += 1;
             }
+            
+            if (id_sprite < 3 || id_sprite > 4)
+            {
+            	id_sprite = 3;
+            }
+            
+            if (sprite_timming == 16)
+            {
+                id_sprite ++;
+                sprite_timming = 0;
+            }
+            else
+            {
+                sprite_timming ++;
+            }
+            
+            if (id_sprite == 5)
+            {
+                id_sprite = 3;
+            }
         }
         else if (Keyboard.isKeyDown(Keyboard.KEY_D))
         {
@@ -404,6 +453,25 @@ public class MainCode {
             if (acelx > -40)
             {
                 acelx -= 1;
+            }
+            
+            if (id_sprite < 5 || id_sprite > 8)
+            {
+            	id_sprite = 6;
+            }
+            
+            if (sprite_timming == 16)
+            {
+                id_sprite ++;
+                sprite_timming = 0;
+            }
+            else
+            {
+                sprite_timming ++;
+            }
+            if (id_sprite == 8)
+            {
+                id_sprite = 6;
             }
         }
         else
@@ -467,6 +535,7 @@ public class MainCode {
             {
                 acely += 1;
             }
+            id_sprite = 1;
         }
         else if (Keyboard.isKeyDown(Keyboard.KEY_S))
         {
@@ -475,6 +544,7 @@ public class MainCode {
             {
                 acely -= 1;
             }
+            id_sprite = 0;
         }
         else
         {
@@ -488,20 +558,6 @@ public class MainCode {
             }
         }
     
-        if (id_sprite > 2)
-        {
-            id_sprite = 0;
-            sprite_timming = 0;
-        }
-        else if (sprite_timming == 8)
-        {
-            id_sprite ++;
-            sprite_timming = 0;
-        }
-        else
-        {
-            sprite_timming ++;
-        }
         
         chunk_x = (int) (x_new / 2.56f);
         chunk_y = (int) (y_new / 2.56f);
@@ -540,14 +596,15 @@ public class MainCode {
         		player.set_coordenate(x_new,y_new,0);
 	        }
         	if (Keyboard.isKeyDown(Keyboard.KEY_Q))
-            {
+        	{
             	rotation = rotation + 1.00f;
-            	mapa_temporal[chunk_x][chunk_y].set_rotation(rotation);
+            	//azur
+            	recalculate_rotation();
             }
             if (Keyboard.isKeyDown(Keyboard.KEY_E))
             {
             	rotation = rotation - 1.00f;
-            	mapa_temporal[chunk_x][chunk_y].set_rotation(rotation);
+            	recalculate_rotation();
             }
         	
         } catch (Exception e) {
@@ -1147,7 +1204,6 @@ public class MainCode {
         }
         fps++;
     }
-
     public void initGL() {
         GL11.glDepthFunc(GL11.GL_LEQUAL);
 
@@ -1163,6 +1219,7 @@ public class MainCode {
         //GLU.gluPerspective (45.0f,invAspectRatio, 2f, -2f);
         GL11.glOrtho(-1, 1, -1*invAspectRatio, +1*invAspectRatio, 2, -2);
         GL11.glMatrixMode(GL11.GL_MODELVIEW);
+        shaderProgram = shaders.load_shader("shaders/shader.vs","shaders/shader.fs", "shaders/shader.gs");
     }
     public void Create_camera()
     {
@@ -1226,11 +1283,10 @@ public class MainCode {
     public void Create_player(int id_sprite)
     {
     	//GL11.glColor3f(1.0f,0.0f,0.0f);
-    	
         GL11.glPushMatrix();
-        	id_sprite = 0;
         	/*GL11.glColor4f(1.0f, 1f, 1.0f, 0.1f);*/
-        	
+        //GL20.glUseProgram(0);
+        	//GL20.glUseProgram(shaderProgram);
             GL11.glEnable(GL11.GL_BLEND);
             GL11.glEnable(GL11.GL_TEXTURE_2D);
             GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture_player);
@@ -1259,24 +1315,25 @@ public class MainCode {
                 
                 
 	            GL11.glTexCoord2f(textureXOffset, textureYOffset);
-	            GL11.glVertex3f(-0.04f, 0.0f, 0.08f);
+	            GL11.glVertex3f(-0.035f, 0.0f, 0.07f);
 	            
 	            GL11.glTexCoord2f(textureXOffset + textureWidth, textureYOffset);
-	            GL11.glVertex3f(0.04f, 0.0f, 0.08f);
+	            GL11.glVertex3f(0.035f, 0.0f, 0.07f);
 	            
 	            GL11.glTexCoord2f(textureXOffset + textureWidth, textureYOffset + textureHeight);
-	            GL11.glVertex3f(0.04f,0.0f, 0.0f);
+	            GL11.glVertex3f(0.035f,0.0f, 0.0f);
 	
 	            GL11.glTexCoord2f(textureXOffset, textureYOffset + textureHeight);
-	            GL11.glVertex3f(-0.04f,0.0f, 0.0f);
+	            GL11.glVertex3f(-0.035f,0.0f, 0.0f);
 	            
 	        GL11.glEnd();
+	        //GL20.glUseProgram(0);
 	        GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
 	        //GL11.glTranslatef(-(p_coordenate[0]), -(p_coordenate[0]), -( 0.0f));
         GL11.glDisable(GL11.GL_TEXTURE_2D);
         GL11.glDisable(GL11.GL_BLEND);
         GL11.glPopMatrix();
-
+        
     }
     
     private void pickObject(int x, int y, int position)
@@ -1306,14 +1363,12 @@ public class MainCode {
 	    	
 	    	
     	}
-    	//	
     }
     private void dropObject(int x_map2, int y_map2, int item_id)
     {
     	mapa_temporal[chunk_x][chunk_y].add_Objects(x_map2,y_map2,item_id);
 		
 	}
-    
 
 	public void renderGL() {
     	 // Clear The Screen And The Depth Buffer

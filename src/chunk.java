@@ -26,8 +26,9 @@ public class chunk {
 	private float y;
 	private List<Integer> require_generate_displaylist = new ArrayList<Integer>();
 	private HashSet<Integer> remove_duplicates = new HashSet<Integer>();
-	public chunk(int x, int y, int tex,List<Integer> List_models_public )
+	public chunk(int x, int y, int tex,List<Integer> List_models_public, float rotation)
 	{
+		this.rotation = rotation;
 		this.x = x * 2.56f;
 		this.y = y * 2.56f;
 		
@@ -92,10 +93,10 @@ public class chunk {
 	     	GL11.glColor3f(1f, 1f, 1f);
      	
     	    int[] texture_info_temp = {id_title, 0};
-            float textureXOffset = (texture_info_temp[0]/16f);
-            float textureYOffset = (texture_info_temp[1]/16f);
-            float textureHeight  = 0.062f;
-            float textureWidth   = 0.062f;
+            float textureXOffset = (texture_info_temp[0]/8f);
+            float textureYOffset = (texture_info_temp[1]/8f);
+            float textureHeight  = 0.124f;
+            float textureWidth   = 0.124f;
 
             //System.out.println("id: "+id_title);
             //System.out.println("X: "+(texture_info_temp[0]/10f)+" Y: "+(texture_info_temp[1]/10f));
@@ -138,10 +139,10 @@ public class chunk {
             // draw quad
             //GL11.glBindTexture(GL11.GL_TEXTURE_2D, tex);
     	    int[] texture_info_temp = {id_title, 0};
-            float textureXOffset = (texture_info_temp[0]/16f);
-            float textureYOffset = (texture_info_temp[1]/16f);
-            float textureHeight  = 0.062f;
-            float textureWidth   = 0.062f;
+            float textureXOffset = (texture_info_temp[0]/8f);
+            float textureYOffset = (texture_info_temp[1]/8f);
+            float textureHeight  = 0.124f;
+            float textureWidth   = 0.124f;
 
             //System.out.println("id: "+id_title);
             //System.out.println("X: "+(texture_info_temp[0]/10f)+" Y: "+(texture_info_temp[1]/10f));
