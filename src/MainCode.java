@@ -55,10 +55,11 @@ public class MainCode {
     float rotation = 0;
     int acely = 0;
     int acelx = 0;
-    int ResWidth = 1920;
-    int ResHeight = 1080;
+    int ResWidth = 1280;
+    int ResHeight = 800;
     /** time at last frame */
     long lastFrame;
+    boolean build_after_frame = false;
     int x_map;
     int y_map;
     int chunk_x;
@@ -591,21 +592,18 @@ public class MainCode {
 	    	        }
 	    	    }
 	    	}*/
-        	if (!mapa_temporal[chunk_x][chunk_y].get_blocked(chunk_x,chunk_y))
+        	
+        	if (!mapa_temporal[chunk_x][chunk_y].get_blocked(x_map, y_map))
 	        {
         		player.set_coordenate(x_new,y_new,0);
 	        }
-        	if (Keyboard.isKeyDown(Keyboard.KEY_Q))
+        	else if (build_after_frame == true)
         	{
-            	rotation = rotation + 1.00f;
-            	//azur
-            	recalculate_rotation();
-            }
-            if (Keyboard.isKeyDown(Keyboard.KEY_E))
-            {
-            	rotation = rotation - 1.00f;
-            	recalculate_rotation();
-            }
+        		build_after_frame = false;
+    			y_new += 0.12f;
+    			System.out.println("status:" + mapa_temporal[chunk_x][chunk_y].get_blocked(x_map, y_map));
+    			player.set_coordenate(x_new,y_new,0);
+        	}
         	
         } catch (Exception e) {
         	System.out.println("e:" + e);
@@ -619,7 +617,17 @@ public class MainCode {
                 // important if there is a return in the try-block
             }
         }
-        
+        if (Keyboard.isKeyDown(Keyboard.KEY_Q))
+    	{
+        	rotation = rotation + 1.00f;
+        	//azur
+        	recalculate_rotation();
+        }
+        if (Keyboard.isKeyDown(Keyboard.KEY_E))
+        {
+        	rotation = rotation - 1.00f;
+        	recalculate_rotation();
+        }
         while (Keyboard.next()) {
             if (Keyboard.getEventKeyState()) {
                 if (Keyboard.getEventKey() == Keyboard.KEY_F) {
@@ -920,7 +928,11 @@ public class MainCode {
     	        	mapa_temporal[chunk_x][chunk_y].set_Tiled(x_map,y_map,1);
     	        	
     	        }
-                
+                if (Keyboard.getEventKey() == Keyboard.KEY_U)
+                {
+                	mapa_temporal[chunk_x][chunk_y].add_wall(x_map, y_map, 1);
+                	build_after_frame = true;
+                }
                 if (Keyboard.getEventKey() == Keyboard.KEY_Z)
                 {
                     pickObject(x_map,y_map,0);
@@ -1309,8 +1321,8 @@ public class MainCode {
                 int[] texture_info_temp = {id_sprite, 0};
                 textureXOffset = (texture_info_temp[0]/8f);
                 textureYOffset = (texture_info_temp[1]/8f);
-                textureHeight  = 0.128f;
-                textureWidth   = 0.128f;
+                textureHeight  = 0.126f;
+                textureWidth   = 0.126f;
 
                 
                 

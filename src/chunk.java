@@ -18,6 +18,7 @@ public class chunk {
 	private int chunkDisplayList;
 	private int itemsDisplayList;
 	private int treeDisplayList;
+	private int wallDisplayList;
 	private float rotation = 0f;
 	private Casilla[][] casilla;
 	private List<Integer> List_models_public = new ArrayList<Integer>();
@@ -128,6 +129,47 @@ public class chunk {
             //GL11.glDisable(GL11.GL_TEXTURE_2D);
         
     }
+	private void Create_wall(float bx, float by, float z, int id_title)
+	{
+	       // R,G,B,A Set The Color To Blue One Time Only
+
+        GL11.glTranslatef(bx+0.08f, by+0.08f, z+0.01f);
+        GL11.glRotatef(-rotation, 0f, 0f, 1f);
+        GL11.glRotatef(45f, 1f, 0f, 0f);
+        
+        // draw quad
+        //GL11.glBindTexture(GL11.GL_TEXTURE_2D, tex);
+	    int[] texture_info_temp = {id_title, 0};
+        float textureXOffset = (texture_info_temp[0]/8f);
+        float textureYOffset = (texture_info_temp[1]/8f);
+        float textureHeight  = 0.124f;
+        float textureWidth   = 0.124f;
+
+        //System.out.println("id: "+id_title);
+        //System.out.println("X: "+(texture_info_temp[0]/10f)+" Y: "+(texture_info_temp[1]/10f));
+
+        GL11.glBegin(GL11.GL_QUADS);
+        	
+            GL11.glTexCoord2f(textureXOffset, textureYOffset);
+            GL11.glVertex3f(-0.08f, 0.0f, 0.16f);
+            
+            GL11.glTexCoord2f(textureXOffset + textureWidth, textureYOffset);
+            GL11.glVertex3f(0.08f, 0.0f, 0.16f);
+            
+            GL11.glTexCoord2f(textureXOffset + textureWidth, textureYOffset + textureHeight);
+            GL11.glVertex3f(0.08f, 0.0f, 0.0f);
+
+            GL11.glTexCoord2f(textureXOffset, textureYOffset + textureHeight);
+            GL11.glVertex3f(-0.08f,0.0f, 0.0f);
+            
+        GL11.glEnd();
+        //GL11.glDisable(GL11.GL_TEXTURE_2D);
+        GL11.glRotatef(45f, -1f, 0f, 0f);
+        GL11.glRotatef(-rotation, 0f, 0f, -1f);
+        GL11.glTranslatef(-bx-0.08f, -by-0.08f, -z-0.01f);
+
+		
+	}
 	private void Create_object(float bx,float by, float z, int id_title)
     {
             // R,G,B,A Set The Color To Blue One Time Only
@@ -193,7 +235,15 @@ public class chunk {
 		        	calculate_tree();
 		        }
 		        break;
+		case 3:
+				wallDisplayList = GL11.glGenLists(1);
+		        GL11.glNewList(wallDisplayList, GL11.GL_COMPILE);
+		        {
+		        	calculate_wall();
+		        }
+		        break;
 		}
+		
 		
 		        
 		GL11.glEndList();
@@ -253,15 +303,15 @@ public class chunk {
     	
     	float positX= 0;
         float positY= 0;
-        
+        int object_id_temp = 0;
         //System.out.println("init bla bla ");
-
+        
         for (int v = 0; v < (16); v++)
         {
             for (int i = (int) 0; i < 16; i++)
             {
             	
-            	int object_id_temp = casilla[i][v].get_Objects_check();
+            	object_id_temp = casilla[i][v].get_Objects_check();
             	//
             	if (object_id_temp != 0)
             	{
@@ -294,13 +344,13 @@ public class chunk {
         float positY= 0;
         
         //System.out.println("init bla bla ");
-
+        int object_id_temp = 0;
         for (int v = 0; v < (16); v++)
         {
             for (int i = (int) 0; i < 16; i++)
             {
             	
-            	int object_id_temp = casilla[i][v].get_Tree();
+            	object_id_temp = casilla[i][v].get_Tree();
             	//
             	if (object_id_temp != 0)
             	{
@@ -313,8 +363,7 @@ public class chunk {
                                        
                     GL11.glTranslatef(-(positX+0.08f), -(positY+0.08f), -(casilla[i][v].get_Media()));
                     //Create_tile_object(positX,positY,4);
-            	}
-            
+            	}            
 	            
                 positX +=0.16f;
             }
@@ -322,6 +371,47 @@ public class chunk {
             positY +=0.16f;
         }
 
+	}
+	private void calculate_wall()
+	{
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, tex);
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+     	GL11.glTexEnvf(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL11.GL_MODULATE);
+     	GL11.glColor4ub((byte)255, (byte)255, (byte)255, (byte)255); // You can fade something out in its entirety by altering alpha here too
+    	
+    	
+    	float positX= 0;
+        float positY= 0;
+        int object_id_temp = 0;
+        //System.out.println("init bla bla ");
+        
+        for (int v = 0; v < (16); v++)
+        {
+            for (int i = (int) 0; i < 16; i++)
+            {
+            	
+            	object_id_temp = casilla[i][v].get_Wall();
+            	//
+            	if (object_id_temp != 0)
+            	{
+            		// al ser un array de posiciones, no hay que recorrerlo con un for, lo cual no se le puede
+            		// pasar parametros, as� que lo posicionamos y rotamos antes de pintarlo, y volvemos a recolocar
+            		// las posiciones para evitar que se descojone todo
+            		
+            		Create_wall(positX,positY,casilla[i][v].get_Media(),object_id_temp -1);
+            		//GL11.glCallList(List_models_public.get(0));
+                   
+                    //Create_tile_object(positX,positY,4);
+            	}
+	            
+                positX +=0.16f;
+            }
+            positX -= 16 * 0.16f;
+            positY +=0.16f;
+        }
 	}
 	/*
 	public void draw_chunk()
@@ -350,6 +440,7 @@ public class chunk {
 
          
          GL11.glTranslatef(x,y, 0);
+         GL11.glCallList(wallDisplayList);
          GL11.glCallList(treeDisplayList);
          GL11.glCallList(chunkDisplayList);
          GL11.glCallList(itemsDisplayList);
@@ -477,5 +568,10 @@ public class chunk {
 			casilla[x_map][y_map].down(true,false,false,false);
 			break;
 		}
+	}
+	public void add_wall(int x_map, int y_map, int i) {
+		casilla[x_map][y_map].add_wall(i);
+		this.require_generate_displaylist.add(3);
+		
 	}
 }

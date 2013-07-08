@@ -5,7 +5,8 @@ import java.util.List;
 
 public class Casilla {
 	private int TileID;
-	private int tree;
+	private int tree = 0;
+	private int wall = 0;
 	private boolean blocked = false;
 	private float[] vertices = {0,0,0,0};
 	private List<Integer> id_obj =new ArrayList<Integer>();
@@ -58,8 +59,11 @@ public class Casilla {
 	/*OBJECTS*/
 	public void add_Tree(int type)
 	{
-		this.tree = type;
-		set_blocked(true);
+		if (blocked == false)
+		{
+			this.tree = type;
+			set_blocked(true);
+		}
 	}
 	public void remove_Tree()
 	{
@@ -99,11 +103,22 @@ public class Casilla {
 	}
 	public boolean get_blocked()
 	{
-		return this.blocked;
+		return blocked;
 	}
 	/*BLOCKED*/
 	public float[] get_vertices() {
 		return vertices;
+	}
+	public void add_wall(int i) {
+		if (blocked == false)
+		{
+			set_blocked(true);
+			wall = i;
+		}	
+	}
+	public int get_Wall()
+	{
+		return wall;
 	}
 	
 	 /**
