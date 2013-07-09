@@ -20,56 +20,7 @@ public class shots {
 	public boolean move_shot(float delta)
 	{
 	    this.x -= this.speed * delta * (float)Math.sin(Math.toRadians(this.angle));
-	    this.y += this.speed * delta * (float)Math.cos(Math.toRadians(this.angle));
-		/*if (direccion == 0)
-		{
-			this.y -= this.speed * delta;
-			if (this.y < init_y-0.5f)
-			{
-				return true;
-			}
-		}
-		else if (direccion == 1)
-		{
-			this.y += this.speed * delta;
-			if (this.y > init_y+0.5f)
-			{
-				return true;
-			}
-		}
-		else if (direccion == 2)
-		{
-			this.x += this.speed * delta;
-			if (this.x > init_x+0.5f)
-			{
-				return true;
-			}
-		}
-		else if (direccion == 3)
-		{
-			this.x -= this.speed * delta;
-			if (this.x < init_x-0.5f)
-			{
-				return true;
-			}
-		}
-		else if (direccion == 4)
-		{
-			
-		}
-		else if (direccion == 5)
-		{
-			
-		}
-		else if (direccion == 6)
-		{
-			
-		}
-		else if (direccion == 7)
-		{
-			
-		}*/
-		
+	    this.y += this.speed * delta * (float)Math.cos(Math.toRadians(this.angle));		
 		return false;
 	}
 	public float get_x()

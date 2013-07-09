@@ -393,7 +393,14 @@ public class MainCode {
     	mapa_temporal[chunk_x][1+chunk_y].set_rotation(rotation);
     	mapa_temporal[1+chunk_x][1+chunk_y].set_rotation(rotation);
 	}
-    public void update(int delta) {
+	public float[] calculate_move(float delta, float x_new, float y_new, float angle, float actual_speed)
+	{
+	    x_new -= actual_speed * delta * (float)Math.sin(Math.toRadians(angle));
+	    y_new += actual_speed * delta * (float)Math.cos(Math.toRadians(angle));
+	    float[] p_coordenate = {x_new,y_new}; 
+		return p_coordenate;
+	}
+    public void update(float delta) {
         // rotate quad
 	   
     	float[] p_coordenate = player.get_coordenate();
@@ -422,7 +429,12 @@ public class MainCode {
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_A))
         {
-            x_new -= actual_speed * delta;
+    		
+    		float[] new_coordenate = calculate_move(delta, x_new, y_new, -(270f+rotation), actual_speed);
+    		x_new = new_coordenate[0];
+            y_new = new_coordenate[1];
+            
+            //x_new -= actual_speed * delta;
             if (acelx < 40)
             {
                 acelx += 1;
@@ -450,7 +462,9 @@ public class MainCode {
         }
         else if (Keyboard.isKeyDown(Keyboard.KEY_D))
         {
-            x_new += actual_speed * delta;
+        	float[] new_coordenate = calculate_move(delta, x_new, y_new, -(90f+rotation), actual_speed);
+    		x_new = new_coordenate[0];
+            y_new = new_coordenate[1];
             if (acelx > -40)
             {
                 acelx -= 1;
@@ -486,6 +500,39 @@ public class MainCode {
                 acelx += 1;
             }
 
+        }
+        if (Keyboard.isKeyDown(Keyboard.KEY_W))
+        {
+        	float[] new_coordenate = calculate_move(delta, x_new, y_new, -(180f+rotation), actual_speed);
+    		x_new = new_coordenate[0];
+            y_new = new_coordenate[1];
+            if (acely < 40)
+            {
+                acely += 1;
+            }
+            id_sprite = 1;
+        }
+        else if (Keyboard.isKeyDown(Keyboard.KEY_S))
+        {
+        	float[] new_coordenate = calculate_move(delta, x_new, y_new, -(rotation), actual_speed);
+    		x_new = new_coordenate[0];
+            y_new = new_coordenate[1];
+            if (acely > -40)
+            {
+                acely -= 1;
+            }
+            id_sprite = 0;
+        }
+        else
+        {
+            if (acely > 0 && acely != 0)
+            {
+                acely -= 1;
+            }
+            else if (acely < 1 && acely != 0)
+            {
+                acely += 1;
+            }
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_Y))
         {
@@ -529,37 +576,7 @@ public class MainCode {
         		
 	        }
         }
-        if (Keyboard.isKeyDown(Keyboard.KEY_W))
-        {
-            y_new -= actual_speed * delta;
-            if (acely < 40)
-            {
-                acely += 1;
-            }
-            id_sprite = 1;
-        }
-        else if (Keyboard.isKeyDown(Keyboard.KEY_S))
-        {
-            y_new += actual_speed * delta;
-            if (acely > -40)
-            {
-                acely -= 1;
-            }
-            id_sprite = 0;
-        }
-        else
-        {
-            if (acely > 0 && acely != 0)
-            {
-                acely -= 1;
-            }
-            else if (acely < 1 && acely != 0)
-            {
-                acely += 1;
-            }
-        }
-    
-        
+       
         chunk_x = (int) (x_new / 2.56f);
         chunk_y = (int) (y_new / 2.56f);
 
