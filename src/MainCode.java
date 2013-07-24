@@ -34,7 +34,7 @@ import java.nio.IntBuffer;
 import utility.*;
 
 public class MainCode {
-	//private static float[] lightPosition = {-12.19f, 1.36f, 1.45f, 110.1f};
+	private  float[] lightPosition = {10f,10f,10f,0f};
 	private List<Integer> List_models_public = new ArrayList<Integer>();
 	private List<shots> shots_list = new ArrayList<shots>();
 	private List<Player> enemy_list = new ArrayList<Player>();
@@ -55,8 +55,8 @@ public class MainCode {
     float rotation = 0;
     int acely = 0;
     int acelx = 0;
-    int ResWidth = 1280;
-    int ResHeight = 800;
+    int ResWidth = 1920;
+    int ResHeight = 1080;
     /** time at last frame */
     long lastFrame;
     boolean build_after_frame = false;
@@ -78,6 +78,7 @@ public class MainCode {
     private int texture_items;
     private int texture_fires;
     private int texture_tree;
+    private int texture_wall;
     int id_sprite;
     int sprite_timming=0;
     private int bagDisplayList;
@@ -94,11 +95,12 @@ public class MainCode {
         }
         
         tex = setupTextures("assets/stGrid1.png");
-        bag_auv = setupTextures("src/bag_auv.png");
+        //bag_auv = setupTextures("src/bag_auv.png");
         texture_player = setupTextures("assets/player.png");
         texture_items = setupTextures("assets/items.png");
         texture_fires = setupTextures("assets/fires.png");
         texture_tree = setupTextures("assets/tree.png");
+        texture_wall = setupTextures("assets/wall.png");
         initGL(); // init OpenGL
         getDelta(); // call once before loop to initialise lastFrame
         lastFPS = getTime(); // call before loop to initialise fps timer
@@ -111,6 +113,8 @@ public class MainCode {
         //player
         //setUpDisplayLists("src/player.obj", texture_player, 1);
         setUpDisplayLists("src/tree.obj", texture_tree, 1);
+        setUpDisplayLists("src/wall_turret.obj", texture_wall, 1);
+        setUpDisplayLists("src/wall.obj", texture_wall, 1);
         load_map_init(0,0);
         //setUpLighting();
         //Box box = new Box();
@@ -359,8 +363,8 @@ public class MainCode {
         
         return tmp.get(0);
     }
-	private static void setUpLighting() {
-        GL11.glShadeModel(GL11.GL_SMOOTH);
+	private static void startLighting() {
+       
         GL11.glEnable(GL11.GL_LIGHTING);
         GL11.glEnable(GL11.GL_LIGHT0);
 
@@ -369,6 +373,16 @@ public class MainCode {
         GL11.glEnable(GL11.GL_COLOR_MATERIAL);
         GL11.glColorMaterial(GL11.GL_FRONT, GL11.GL_DIFFUSE);
     }
+	private static void stopLighting()
+	{
+        GL11.glDisable(GL11.GL_LIGHTING);
+        GL11.glDisable(GL11.GL_LIGHT0);
+
+        //GL11.glEnable(GL11.GL_CULL_FACE);
+        //GL11.glCullFace(GL11.GL_BACK);
+        GL11.glDisable(GL11.GL_COLOR_MATERIAL);
+        //GL11.glColorMaterial(GL11.GL_FRONT, GL11.GL_DIFFUSE);
+	}
 	public void recalculate_rotation()
 	{
 		if (chunk_x != 0)
@@ -945,47 +959,20 @@ public class MainCode {
     	        	mapa_temporal[chunk_x][chunk_y].set_Tiled(x_map,y_map,1);
     	        	
     	        }
-                if (Keyboard.getEventKey() == Keyboard.KEY_U)
-                {
-                	mapa_temporal[chunk_x][chunk_y].add_wall(x_map, y_map, 1);
-                	build_after_frame = true;
-                }
-                if (Keyboard.getEventKey() == Keyboard.KEY_Z)
-                {
-                    pickObject(x_map,y_map,0);
-                }
-                else if (Keyboard.getEventKey() == Keyboard.KEY_F1)
-                {
-                    pickObject(x_map,y_map,0);
-                }
-                else if (Keyboard.getEventKey() == Keyboard.KEY_F2)
-                {
-                	pickObject(x_map,y_map,1);
-                }
-                else if (Keyboard.getEventKey() == Keyboard.KEY_F3)
-                {
-                	pickObject(x_map,y_map,2);
-                }
-                else if (Keyboard.getEventKey() == Keyboard.KEY_F4)
-                {
-                	pickObject(x_map,y_map,3);
-                }
-                else if (Keyboard.getEventKey() == Keyboard.KEY_F5)
-                {
-                	pickObject(x_map,y_map,4);
-                }
-                else if (Keyboard.getEventKey() == Keyboard.KEY_F6)
-                {
-                	pickObject(x_map,y_map,5);
-                }
-                else if(Keyboard.isKeyDown(Keyboard.KEY_LCONTROL))
+                
+                if(Keyboard.isKeyDown(Keyboard.KEY_LCONTROL))
                 {
                 	id_sprite = 4;
                 	//int value = player.drop_next_item();
                 	//if (value != 0)
                 	//{
                 	int item_id = 0;
-                	if (Keyboard.getEventKey() == Keyboard.KEY_V)
+                	if (Keyboard.getEventKey() == Keyboard.KEY_I)
+                    {
+                    	mapa_temporal[chunk_x][chunk_y].add_wall(x_map, y_map, 3);
+                    	build_after_frame = true;
+                    }
+                	else if (Keyboard.getEventKey() == Keyboard.KEY_V)
                     {
                 		item_id = player.drop_next_item();
                     }
@@ -1043,6 +1030,44 @@ public class MainCode {
                     else if (Keyboard.getEventKey() == Keyboard.KEY_6)
                     {
                         use_item(5);
+                    }
+                	if (Keyboard.getEventKey() == Keyboard.KEY_U)
+                    {
+                    	mapa_temporal[chunk_x][chunk_y].add_wall(x_map, y_map, 1);
+                    	build_after_frame = true;
+                    }
+                    else if (Keyboard.getEventKey() == Keyboard.KEY_I)
+                    {
+                    	mapa_temporal[chunk_x][chunk_y].add_wall(x_map, y_map, 2);
+                    	build_after_frame = true;
+                    }
+                    else if (Keyboard.getEventKey() == Keyboard.KEY_Z)
+                    {
+                        pickObject(x_map,y_map,0);
+                    }
+                    else if (Keyboard.getEventKey() == Keyboard.KEY_F1)
+                    {
+                        pickObject(x_map,y_map,0);
+                    }
+                    else if (Keyboard.getEventKey() == Keyboard.KEY_F2)
+                    {
+                    	pickObject(x_map,y_map,1);
+                    }
+                    else if (Keyboard.getEventKey() == Keyboard.KEY_F3)
+                    {
+                    	pickObject(x_map,y_map,2);
+                    }
+                    else if (Keyboard.getEventKey() == Keyboard.KEY_F4)
+                    {
+                    	pickObject(x_map,y_map,3);
+                    }
+                    else if (Keyboard.getEventKey() == Keyboard.KEY_F5)
+                    {
+                    	pickObject(x_map,y_map,4);
+                    }
+                    else if (Keyboard.getEventKey() == Keyboard.KEY_F6)
+                    {
+                    	pickObject(x_map,y_map,5);
                     }
                 }
             }
@@ -1234,6 +1259,7 @@ public class MainCode {
         fps++;
     }
     public void initGL() {
+    	GL11.glEnable(GL11.GL_AUTO_NORMAL); 
         GL11.glDepthFunc(GL11.GL_LEQUAL);
 
         GL11.glViewport(0, 0, ResWidth, ResHeight);
@@ -1249,6 +1275,7 @@ public class MainCode {
         GL11.glOrtho(-1, 1, -1*invAspectRatio, +1*invAspectRatio, 2, -2);
         GL11.glMatrixMode(GL11.GL_MODELVIEW);
         shaderProgram = shaders.load_shader("shaders/shader.vs","shaders/shader.fs", "shaders/shader.gs");
+        GL11.glShadeModel(GL11.GL_SMOOTH);
     }
     public void Create_camera()
     {
@@ -1257,11 +1284,12 @@ public class MainCode {
     	GL11.glRotatef(rotation, 0f, 0f, 1f);
     	
     	float[] temp = player.get_coordenate();
-        GL11.glTranslatef( -temp[0] , -temp[1], 0f);
-        //float[] p_coordenate = player.get_coordenate();
+        
+        float[] p_coordenate = player.get_coordenate();
         //p_coordenate[0]
         //lightPosition = new float[]{p_coordenate[0], p_coordenate[1], 1f, 0};
-        //GL11.glLight(GL11.GL_LIGHT0, GL11.GL_POSITION, BufferTools.asFlippedFloatBuffer(lightPosition));
+        GL11.glLight(GL11.GL_LIGHT0, GL11.GL_POSITION, BufferTools.asFlippedFloatBuffer(lightPosition));
+        GL11.glTranslatef( -temp[0] , -temp[1], 0f);
 
     }
     /*
@@ -1407,9 +1435,10 @@ public class MainCode {
         GL11.glLoadIdentity();
         GL11.glRotatef(180, 1.0f, 0.0f, 0.0f);
         
-        
+        //startLighting();
         renderWorld();
-        
+        stopLighting();
+        Create_player(id_sprite);
         if (enemy_list != null)
     	{
     		//System.out.println("object_tempssss :"+object_temp.add(8));
@@ -1532,7 +1561,7 @@ public class MainCode {
     	
     	mapa_temporal[chunk_x][1+chunk_y].draw_chunk();
     	mapa_temporal[1+chunk_x][1+chunk_y].draw_chunk();
-        Create_player(id_sprite);
+        
     	
         //map.render(0,0);
         

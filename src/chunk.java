@@ -1,6 +1,8 @@
 //import java.io.File;
 //import java.io.FileNotFoundException;
 //import java.io.IOException;
+import static org.lwjgl.opengl.GL11.glNormal3f;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -85,13 +87,6 @@ public class chunk {
             //GL11.glTranslatef(-bx, -by, 0);
             // draw quad
             //GL11.glBindTexture(GL11.GL_TEXTURE_2D, tex);
-			GL11.glEnable(GL11.GL_TEXTURE_2D);
-			GL11.glBindTexture(GL11.GL_TEXTURE_2D, tex);
-			GL11.glEnable(GL11.GL_BLEND);
-	        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-	     	GL11.glTexEnvf(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL11.GL_MODULATE);
-	     	GL11.glColor4ub((byte)255, (byte)255, (byte)255, (byte)255); // You can fade something out in its entirety by altering alpha here too
-	     	GL11.glColor3f(1f, 1f, 1f);
      	
     	    int[] texture_info_temp = {id_title, 0};
             float textureXOffset = (texture_info_temp[0]/8f);
@@ -101,75 +96,42 @@ public class chunk {
 
             //System.out.println("id: "+id_title);
             //System.out.println("X: "+(texture_info_temp[0]/10f)+" Y: "+(texture_info_temp[1]/10f));
-                
             GL11.glBegin(GL11.GL_TRIANGLES);
                 GL11.glTexCoord2f(textureXOffset, textureYOffset);
+                glNormal3f(bx, by, vertices[0]);
                 GL11.glVertex3f(bx, by, vertices[0]);
                 
+                
                 GL11.glTexCoord2f(textureXOffset + textureWidth, textureYOffset);
+                glNormal3f(bx + 0.16f, by, vertices[1]);
                 GL11.glVertex3f(bx + 0.16f, by, vertices[1]);
                 
+                
                 GL11.glTexCoord2f(textureXOffset + textureWidth, textureYOffset + textureHeight);
+                glNormal3f(bx + 0.16f, by + 0.16f, vertices[2]);
                 GL11.glVertex3f(bx + 0.16f, by + 0.16f, vertices[2]);
-
-                GL11.glTexCoord2f(textureXOffset, textureYOffset + textureHeight);
-                GL11.glVertex3f(bx,by + 0.16f, vertices[3]);
+                
             GL11.glEnd();
             GL11.glBegin(GL11.GL_TRIANGLES);
 	            GL11.glTexCoord2f(textureXOffset, textureYOffset);
+	            glNormal3f(bx, by, vertices[0]);
 	            GL11.glVertex3f(bx, by, vertices[0]);
 	            
 	            
 	            GL11.glTexCoord2f(textureXOffset + textureWidth, textureYOffset + textureHeight);
+	            glNormal3f(bx + 0.16f, by + 0.16f, vertices[2]);
 	            GL11.glVertex3f(bx + 0.16f, by + 0.16f, vertices[2]);
-	
+	            
+	            
 	            GL11.glTexCoord2f(textureXOffset, textureYOffset + textureHeight);
+	            glNormal3f(bx,by + 0.16f, vertices[3]);
 	            GL11.glVertex3f(bx,by + 0.16f, vertices[3]);
+	            
+	            
             GL11.glEnd();
             //GL11.glDisable(GL11.GL_TEXTURE_2D);
         
     }
-	private void Create_wall(float bx, float by, float z, int id_title)
-	{
-	       // R,G,B,A Set The Color To Blue One Time Only
-
-        GL11.glTranslatef(bx+0.08f, by+0.08f, z+0.01f);
-        GL11.glRotatef(-rotation, 0f, 0f, 1f);
-        GL11.glRotatef(45f, 1f, 0f, 0f);
-        
-        // draw quad
-        //GL11.glBindTexture(GL11.GL_TEXTURE_2D, tex);
-	    int[] texture_info_temp = {id_title, 0};
-        float textureXOffset = (texture_info_temp[0]/8f);
-        float textureYOffset = (texture_info_temp[1]/8f);
-        float textureHeight  = 0.124f;
-        float textureWidth   = 0.124f;
-
-        //System.out.println("id: "+id_title);
-        //System.out.println("X: "+(texture_info_temp[0]/10f)+" Y: "+(texture_info_temp[1]/10f));
-
-        GL11.glBegin(GL11.GL_QUADS);
-        	
-            GL11.glTexCoord2f(textureXOffset, textureYOffset);
-            GL11.glVertex3f(-0.08f, 0.0f, 0.16f);
-            
-            GL11.glTexCoord2f(textureXOffset + textureWidth, textureYOffset);
-            GL11.glVertex3f(0.08f, 0.0f, 0.16f);
-            
-            GL11.glTexCoord2f(textureXOffset + textureWidth, textureYOffset + textureHeight);
-            GL11.glVertex3f(0.08f, 0.0f, 0.0f);
-
-            GL11.glTexCoord2f(textureXOffset, textureYOffset + textureHeight);
-            GL11.glVertex3f(-0.08f,0.0f, 0.0f);
-            
-        GL11.glEnd();
-        //GL11.glDisable(GL11.GL_TEXTURE_2D);
-        GL11.glRotatef(45f, -1f, 0f, 0f);
-        GL11.glRotatef(-rotation, 0f, 0f, -1f);
-        GL11.glTranslatef(-bx-0.08f, -by-0.08f, -z-0.01f);
-
-		
-	}
 	private void Create_object(float bx,float by, float z, int id_title)
     {
             // R,G,B,A Set The Color To Blue One Time Only
@@ -222,7 +184,7 @@ public class chunk {
 		        }
 		        break;
 		case 1:
-				itemsDisplayList = GL11.glGenLists(4);
+				itemsDisplayList = GL11.glGenLists(1);
 		        GL11.glNewList(itemsDisplayList, GL11.GL_COMPILE);
 		        {
 		        	calculate_items();
@@ -250,7 +212,18 @@ public class chunk {
 	}
 	private void calculate_map()
 	{
-         	
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, tex);
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+     	GL11.glTexEnvf(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL11.GL_MODULATE);
+     	GL11.glColor4ub((byte)255, (byte)255, (byte)255, (byte)255); // You can fade something out in its entirety by altering alpha here too
+     	
+		GL11.glDisable(GL11.GL_LIGHTING);
+        GL11.glDisable(GL11.GL_LIGHT0);
+        GL11.glDisable(GL11.GL_COLOR_MATERIAL);
+        
     	float positX= 0;
         float positY= 0;
 
@@ -300,7 +273,12 @@ public class chunk {
      	GL11.glTexEnvf(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL11.GL_MODULATE);
      	GL11.glColor4ub((byte)255, (byte)255, (byte)255, (byte)255); // You can fade something out in its entirety by altering alpha here too
     	
-    	
+     	GL11.glDisable(GL11.GL_LIGHTING);
+        GL11.glDisable(GL11.GL_LIGHT0);
+        GL11.glDisable(GL11.GL_COLOR_MATERIAL);
+        //GL11.glEnable(GL11.GL_CULL_FACE);
+        //GL11.glCullFace(GL11.GL_BACK);
+        
     	float positX= 0;
         float positY= 0;
         int object_id_temp = 0;
@@ -330,6 +308,9 @@ public class chunk {
             positX -= 16 * 0.16f;
             positY +=0.16f;
         }
+        //GL11.glEnable(GL11.GL_CULL_FACE);
+        //GL11.glCullFace(GL11.GL_BACK);
+        
 	}
 	private void calculate_tree()
 	{
@@ -340,6 +321,10 @@ public class chunk {
      	GL11.glTexEnvf(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL11.GL_MODULATE);
      	GL11.glColor4ub((byte)255, (byte)255, (byte)255, (byte)255); // You can fade something out in its entirety by altering alpha here too
     	
+     	GL11.glEnable(GL11.GL_LIGHTING);
+        GL11.glEnable(GL11.GL_LIGHT0);
+        GL11.glEnable(GL11.GL_COLOR_MATERIAL);
+        
     	float positX= 0;
         float positY= 0;
         
@@ -382,7 +367,10 @@ public class chunk {
      	GL11.glTexEnvf(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL11.GL_MODULATE);
      	GL11.glColor4ub((byte)255, (byte)255, (byte)255, (byte)255); // You can fade something out in its entirety by altering alpha here too
     	
-    	
+     	GL11.glEnable(GL11.GL_LIGHTING);
+        GL11.glEnable(GL11.GL_LIGHT0);
+        GL11.glEnable(GL11.GL_COLOR_MATERIAL);
+        
     	float positX= 0;
         float positY= 0;
         int object_id_temp = 0;
@@ -400,8 +388,20 @@ public class chunk {
             		// al ser un array de posiciones, no hay que recorrerlo con un for, lo cual no se le puede
             		// pasar parametros, as� que lo posicionamos y rotamos antes de pintarlo, y volvemos a recolocar
             		// las posiciones para evitar que se descojone todo
-            		
-            		Create_wall(positX,positY,casilla[i][v].get_Media(),object_id_temp -1);
+            		GL11.glTranslatef(positX+0.08f, positY+0.08f, casilla[i][v].get_Media());
+            		if (object_id_temp == 3)
+            		{
+            			GL11.glRotatef(90f, 0f, 0f, 1f);
+            			GL11.glCallList(List_models_public.get(2));
+            			GL11.glRotatef(-90f, 0f, 0f, 1f);
+            		}
+            		else
+            		{
+            			GL11.glCallList(List_models_public.get(object_id_temp));
+            		}
+                                       
+                    GL11.glTranslatef(-(positX+0.08f), -(positY+0.08f), -(casilla[i][v].get_Media()));
+            		//Create_wall(positX,positY,casilla[i][v].get_Media(),object_id_temp -1);
             		//GL11.glCallList(List_models_public.get(0));
                    
                     //Create_tile_object(positX,positY,4);
@@ -442,8 +442,9 @@ public class chunk {
          GL11.glTranslatef(x,y, 0);
          GL11.glCallList(wallDisplayList);
          GL11.glCallList(treeDisplayList);
-         GL11.glCallList(chunkDisplayList);
+         
          GL11.glCallList(itemsDisplayList);
+         GL11.glCallList(chunkDisplayList);
          
  	     //GL11.glTranslatef(-p_coordenate[0], -p_coordenate[1], p_coordenate[2]);
  	     
