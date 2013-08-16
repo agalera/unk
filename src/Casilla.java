@@ -7,9 +7,10 @@ public class Casilla {
 	private int TileID;
 	private int tree = 0;
 	private int wall = 0;
+	private int item = 0; // item hidden (1 ninguno)
 	private boolean blocked = false;
 	private float[] vertices = {0,0,0,0};
-	private List<Integer> id_obj =new ArrayList<Integer>();
+	private List<Integer> id_obj =new ArrayList<Integer>();  //lista de objetos cuando es un bag
 	
 	public Casilla(int TileID, float a, float b, float c, float d)
 	{
@@ -65,6 +66,15 @@ public class Casilla {
 			set_blocked(true);
 		}
 	}
+	public void add_Item(int item)
+	{
+		if (blocked == false && get_Objects_check() == 0)
+		{
+			this.item = item;
+			
+			//set_blocked(false);
+		}
+	}
 	public void remove_Tree()
 	{
 		this.tree = 0;
@@ -73,6 +83,10 @@ public class Casilla {
 	{
 		return this.tree;
 	}
+	public int get_Item()
+	{
+		return this.item;
+	}
 	public void add_Objects(int id_obj)
 	{
 		this.id_obj.add(id_obj);
@@ -80,6 +94,10 @@ public class Casilla {
 	public void remove_Objects()
 	{
 		this.id_obj = null;
+	}
+	public void remove_Item()
+	{
+		this.item = 0;
 	}
 	public void set_Objects(List<Integer> id_obj)
 	{

@@ -73,7 +73,7 @@ public class MainCode {
     /** is VSync Enabled */
     boolean vsync;
     private int bag_auv;
-    private int tex;
+    private int[] gridtiles = {0,0};
     private int texture_player;
     private int texture_items;
     private int texture_fires;
@@ -94,7 +94,8 @@ public class MainCode {
             System.exit(0);
         }
         
-        tex = setupTextures("assets/stGrid1.png");
+        gridtiles[0] = setupTextures("assets/stGrid1.png");
+        gridtiles[1] = setupTextures("assets/itemsgrid.png");
         //bag_auv = setupTextures("src/bag_auv.png");
         texture_player = setupTextures("assets/player.png");
         texture_items = setupTextures("assets/items.png");
@@ -159,25 +160,25 @@ public class MainCode {
 	
     	if (x != 0)
     	{
-    	    mapa_temporal[x-1][y] = new chunk(x-1,y,tex, List_models_public, rotation);
-    	    mapa_temporal[x-1][1+y] = new chunk(x-1,1+y,tex, List_models_public, rotation);
+    	    mapa_temporal[x-1][y] = new chunk(x-1,y,gridtiles, List_models_public, rotation);
+    	    mapa_temporal[x-1][1+y] = new chunk(x-1,1+y,gridtiles, List_models_public, rotation);
     	}
     	if (x != 0 && y != 0)
     	{
-    		mapa_temporal[x-1][y-1] = new chunk(x-1,y-1,tex, List_models_public, rotation);
+    		mapa_temporal[x-1][y-1] = new chunk(x-1,y-1,gridtiles, List_models_public, rotation);
     	}
     	if (y != 0)
     	{
-	    	mapa_temporal[x][y-1] = new chunk(x,y-1,tex, List_models_public, rotation);
-		    mapa_temporal[1+x][y-1] = new chunk(1+x,y-1,tex, List_models_public, rotation);
+	    	mapa_temporal[x][y-1] = new chunk(x,y-1,gridtiles, List_models_public, rotation);
+		    mapa_temporal[1+x][y-1] = new chunk(1+x,y-1,gridtiles, List_models_public, rotation);
     	}
 
-    	mapa_temporal[x][y] = new chunk(x,y,tex, List_models_public, rotation);
-    	mapa_temporal[1+x][y] = new chunk(1+x,y,tex, List_models_public, rotation);
+    	mapa_temporal[x][y] = new chunk(x,y,gridtiles, List_models_public, rotation);
+    	mapa_temporal[1+x][y] = new chunk(1+x,y,gridtiles, List_models_public, rotation);
 
 
-    	mapa_temporal[x][1+y] = new chunk(x,1+y,tex, List_models_public, rotation);
-    	mapa_temporal[1+x][1+y] = new chunk(1+x,1+y,tex, List_models_public, rotation);
+    	mapa_temporal[x][1+y] = new chunk(x,1+y,gridtiles, List_models_public, rotation);
+    	mapa_temporal[1+x][1+y] = new chunk(1+x,1+y,gridtiles, List_models_public, rotation);
     }
     private void load_map(int x, int y)
     {
@@ -188,49 +189,49 @@ public class MainCode {
 		{
 		    if (mapa_temporal[x-1][y] == null)
 		    {
-		    	mapa_temporal[x-1][y] = new chunk(x-1,y,tex, List_models_public, rotation);
+		    	mapa_temporal[x-1][y] = new chunk(x-1,y,gridtiles, List_models_public, rotation);
 		    }
 		    if (mapa_temporal[x-1][1+y] == null)
 		    {
-		    	mapa_temporal[x-1][1+y] = new chunk(x-1,1+y,tex, List_models_public, rotation);
+		    	mapa_temporal[x-1][1+y] = new chunk(x-1,1+y,gridtiles, List_models_public, rotation);
 		    }
 		}
 		if (x != 0 && y != 0)
 		{
 			if (mapa_temporal[x-1][y-1] == null)
 			{
-				mapa_temporal[x-1][y-1] = new chunk(x-1,y-1,tex, List_models_public, rotation);
+				mapa_temporal[x-1][y-1] = new chunk(x-1,y-1,gridtiles, List_models_public, rotation);
 			}
 		}
 		if (y != 0)
 		{
 	    	if (mapa_temporal[x][y-1] == null)
 	    	{
-	    		mapa_temporal[x][y-1] = new chunk(x,y-1,tex, List_models_public, rotation);
+	    		mapa_temporal[x][y-1] = new chunk(x,y-1,gridtiles, List_models_public, rotation);
 	    	}
 		    if (mapa_temporal[1+x][y-1] == null)
 		    {
-		    	mapa_temporal[1+x][y-1] = new chunk(1+x,y-1,tex, List_models_public, rotation);
+		    	mapa_temporal[1+x][y-1] = new chunk(1+x,y-1,gridtiles, List_models_public, rotation);
 		    }
 		}
 	
 		if (mapa_temporal[x][y] == null)
 		{
-			mapa_temporal[x][y] = new chunk(x,y,tex, List_models_public, rotation);
+			mapa_temporal[x][y] = new chunk(x,y,gridtiles, List_models_public, rotation);
 		}
 		if (mapa_temporal[1+x][y] == null)
 		{
-			mapa_temporal[1+x][y] = new chunk(1+x,y,tex, List_models_public, rotation);
+			mapa_temporal[1+x][y] = new chunk(1+x,y,gridtiles, List_models_public, rotation);
 		}
 	
 	
 		if (mapa_temporal[x][1+y] == null)
 		{
-			mapa_temporal[x][1+y] = new chunk(x,1+y,tex, List_models_public, rotation);
+			mapa_temporal[x][1+y] = new chunk(x,1+y,gridtiles, List_models_public, rotation);
 		}
 		if (mapa_temporal[1+x][1+y] == null)
 		{
-			mapa_temporal[1+x][1+y] = new chunk(1+x,1+y,tex, List_models_public, rotation);
+			mapa_temporal[1+x][1+y] = new chunk(1+x,1+y,gridtiles, List_models_public, rotation);
 		}
     }
     private void unload_map(int x, int y)
@@ -1280,7 +1281,7 @@ public class MainCode {
     public void Create_camera()
     {
     	GL11.glRotatef(0f, 0f, 0f, 0f);
-    	GL11.glRotatef(45f, 1f, 0f, 0f);
+    	GL11.glRotatef(20f, 1f, 0f, 0f);
     	GL11.glRotatef(rotation, 0f, 0f, 1f);
     	
     	float[] temp = player.get_coordenate();
@@ -1355,7 +1356,7 @@ public class MainCode {
             
     		GL11.glTranslatef(p_coordenate[0], p_coordenate[1], 0.0f);
     		GL11.glRotatef(-(rotation), 0f, 0f, 1f);
-    		GL11.glRotatef(45f, 1f, 0f, 0f);
+    		GL11.glRotatef(70f, 1f, 0f, 0f);
     		//GL11.glTranslatef(-(positX+0.08f), -(positY+0.08f), -( 0.0f));
             //GL11.glScalef( 2.0f,  2.0f,  2.0f );
             //GL11.glLoadIdentity();
@@ -1395,30 +1396,41 @@ public class MainCode {
     
     private void pickObject(int x, int y, int position)
     { 
-    	List<Integer> object_temp = mapa_temporal[chunk_x][chunk_y].get_Objects(x,y);
-    	//object_temp = null;
-    	if (object_temp != null)
+    	if (mapa_temporal[chunk_x][chunk_y].get_Objects_check(x,y) != 0)
     	{
-    		//System.out.println("object_tempssss :"+object_temp.add(8));
-	    	Iterator<Integer> it=object_temp.iterator();
-	    	int temp = 0;
-	    	while(it.hasNext())
-	        {
-	          int value=(int)it.next();
-	          if (temp == position)
-	          {
-		          if (player.pick_item(value) == true)
+    		List<Integer> object_temp = mapa_temporal[chunk_x][chunk_y].get_Objects(x,y);
+    	
+	    	//object_temp = null;
+	    	if (object_temp != null)
+	    	{
+	    		//System.out.println("object_tempssss :"+object_temp.add(8));
+		    	Iterator<Integer> it=object_temp.iterator();
+		    	int temp = 0;
+		    	while(it.hasNext())
+		        {
+		          int value=(int)it.next();
+		          if (temp == position)
 		          {
-		        	  it.remove();
-		        	  mapa_temporal[chunk_x][chunk_y].displaylist_regenerate_items();
-		        	  //object_temp = null;
+			          if (player.pick_item(value) == true)
+			          {
+			        	  it.remove();
+			        	  mapa_temporal[chunk_x][chunk_y].displaylist_regenerate_items();
+			        	  //object_temp = null;
+			          }
 		          }
+		          temp ++;
+		        }
+	    	}
+    	}
+    	else
+    	{	
+    		int value = mapa_temporal[chunk_x][chunk_y].get_Item(x,y);	
+    		
+	          if (player.pick_item(value) == true)
+	          {
+	        	  mapa_temporal[chunk_x][chunk_y].get_Item_remove(x,y);
+	        	  mapa_temporal[chunk_x][chunk_y].displaylist_regenerate_objects();
 	          }
-	          temp ++;
-	        }
-	    	
-	    	
-	    	
     	}
     }
     private void dropObject(int x_map2, int y_map2, int item_id)
