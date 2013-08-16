@@ -20,7 +20,6 @@ public class chunk {
 	private int chunkDisplayList;
 	private int itemsDisplayList;
 	private int treeDisplayList;
-	private int itemDisplayList;
 	private int wallDisplayList;
 	private float rotation = 0f;
 	private Casilla[][] casilla;
@@ -43,7 +42,6 @@ public class chunk {
 		this.require_generate_displaylist.add(0);
 		this.require_generate_displaylist.add(1);
 		this.require_generate_displaylist.add(2);
-		this.require_generate_displaylist.add(4);
 
 		casilla = new Casilla[16][16];
         int tileID = 1;
@@ -66,7 +64,6 @@ public class chunk {
             }
         }
         add_Tree(10,10,1);
-        add_Item(9,9,2);
         add_Objects(11,10,1);
         add_Objects(11,9,1);
         add_Objects(9,11,1);
@@ -132,7 +129,8 @@ public class chunk {
             //GL11.glDisable(GL11.GL_TEXTURE_2D);
         
     }
-	private void Create_object(float bx,float by, float z, int id_title)
+	
+	private void Create_object(float bx,float by, float z, int id_title, boolean doble)
     {
             // R,G,B,A Set The Color To Blue One Time Only
 
@@ -145,7 +143,13 @@ public class chunk {
     	    int[] texture_info_temp = {id_title, 0};
             float textureXOffset = (texture_info_temp[0]/8f);
             float textureYOffset = (texture_info_temp[1]/8f);
-            float textureHeight  = 0.246f;
+            float textureHeight  = 0.124f;
+            float value_z = 0.16f;
+            if (doble == true)
+            {
+            	textureHeight  = 0.246f;
+            	value_z = 0.32f;
+            }
             float textureWidth   = 0.124f;
 
             //System.out.println("id: "+id_title);
@@ -154,10 +158,10 @@ public class chunk {
             GL11.glBegin(GL11.GL_QUADS);
             	
 	            GL11.glTexCoord2f(textureXOffset, textureYOffset);
-	            GL11.glVertex3f(-0.08f, 0.0f, 0.32f);
+	            GL11.glVertex3f(-0.08f, 0.0f, value_z);
 	            
 	            GL11.glTexCoord2f(textureXOffset + textureWidth, textureYOffset);
-	            GL11.glVertex3f(0.08f, 0.0f, 0.32f);
+	            GL11.glVertex3f(0.08f, 0.0f, value_z);
 	            
 	            GL11.glTexCoord2f(textureXOffset + textureWidth, textureYOffset + textureHeight);
 	            GL11.glVertex3f(0.08f, 0.0f, 0.0f);
@@ -202,13 +206,6 @@ public class chunk {
 		        GL11.glNewList(wallDisplayList, GL11.GL_COMPILE);
 		        {
 		        	calculate_wall();
-		        }
-		        break;
-		case 4:
-				itemDisplayList = GL11.glGenLists(1);
-		        GL11.glNewList(itemDisplayList, GL11.GL_COMPILE);
-		        {
-		        	calculate_item();
 		        }
 		        break;
 		}
@@ -276,7 +273,7 @@ public class chunk {
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		
 		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, gridtiles[1]);
+		
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
      	GL11.glTexEnvf(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL11.GL_MODULATE);
      	GL11.glColor4ub((byte)255, (byte)255, (byte)255, (byte)255); // You can fade something out in its entirety by altering alpha here too
@@ -304,8 +301,16 @@ public class chunk {
             		// al ser un array de posiciones, no hay que recorrerlo con un for, lo cual no se le puede
             		// pasar parametros, as� que lo posicionamos y rotamos antes de pintarlo, y volvemos a recolocar
             		// las posiciones para evitar que se descojone todo
-            		
-            		Create_object(positX,positY,casilla[i][v].get_Media(),3);
+            		if(object_id_temp != 1)
+            		{
+            			GL11.glBindTexture(GL11.GL_TEXTURE_2D, gridtiles[2]);
+            			Create_object(positX,positY,casilla[i][v].get_Media(),3,true);
+            		}
+            		else
+            		{
+            			GL11.glBindTexture(GL11.GL_TEXTURE_2D, gridtiles[1]);
+            			Create_object(positX,positY,casilla[i][v].get_Media(),casilla[i][v].get_Object_slot(0)-1,false);
+            		}
             		//GL11.glCallList(List_models_public.get(0));
                    
                     //Create_tile_object(positX,positY,4);
@@ -323,7 +328,7 @@ public class chunk {
 	private void calculate_tree()
 	{
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, gridtiles[1]);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, gridtiles[2]);
 		GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
      	GL11.glTexEnvf(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL11.GL_MODULATE);
@@ -350,53 +355,7 @@ public class chunk {
             		// al ser un array de posiciones, no hay que recorrerlo con un for, lo cual no se le puede
             		// pasar parametros, as� que lo posicionamos y rotamos antes de pintarlo, y volvemos a recolocar
             		// las posiciones para evitar que se descojone todo
-            		Create_object(positX,positY,casilla[i][v].get_Media(),0);
-            		/*GL11.glTranslatef(positX+0.08f, positY+0.08f, casilla[i][v].get_Media());
-            		
-            		GL11.glCallList(List_models_public.get(0));
-                                       
-                    GL11.glTranslatef(-(positX+0.08f), -(positY+0.08f), -(casilla[i][v].get_Media()));*/
-                    //Create_tile_object(positX,positY,4);
-            	}            
-	            
-                positX +=0.16f;
-            }
-            positX -= 16 * 0.16f;
-            positY +=0.16f;
-        }
-
-	}
-	private void calculate_item()
-	{
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, gridtiles[1]);
-		GL11.glEnable(GL11.GL_BLEND);
-        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-     	GL11.glTexEnvf(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL11.GL_MODULATE);
-     	GL11.glColor4ub((byte)255, (byte)255, (byte)255, (byte)255); // You can fade something out in its entirety by altering alpha here too
-    	
-     	GL11.glEnable(GL11.GL_LIGHTING);
-        GL11.glEnable(GL11.GL_LIGHT0);
-        GL11.glEnable(GL11.GL_COLOR_MATERIAL);
-        
-    	float positX= 0;
-        float positY= 0;
-        
-        //System.out.println("init bla bla ");
-        int object_id_temp = 0;
-        for (int v = 0; v < (16); v++)
-        {
-            for (int i = (int) 0; i < 16; i++)
-            {
-            	
-            	object_id_temp = casilla[i][v].get_Item();
-            	//
-            	if (object_id_temp != 0)
-            	{
-            		// al ser un array de posiciones, no hay que recorrerlo con un for, lo cual no se le puede
-            		// pasar parametros, as� que lo posicionamos y rotamos antes de pintarlo, y volvemos a recolocar
-            		// las posiciones para evitar que se descojone todo
-            		Create_object(positX,positY,casilla[i][v].get_Media(),object_id_temp);
+            		Create_object(positX,positY,casilla[i][v].get_Media(),0,true);
             		/*GL11.glTranslatef(positX+0.08f, positY+0.08f, casilla[i][v].get_Media());
             		
             		GL11.glCallList(List_models_public.get(0));
@@ -497,7 +456,6 @@ public class chunk {
          GL11.glTranslatef(x,y, 0);
          GL11.glCallList(wallDisplayList);
          GL11.glCallList(treeDisplayList);
-         GL11.glCallList(itemDisplayList);
          GL11.glCallList(itemsDisplayList);
          GL11.glCallList(chunkDisplayList);
          
@@ -514,22 +472,9 @@ public class chunk {
     {
     	return casilla[x][y].get_Objects_check();
     }
-    public int get_Item(int x,int y)
-    {
-    	return casilla[x][y].get_Item();
-    }
-    public boolean get_Item_remove(int x,int y)
-    {
-    	casilla[x][y].remove_Item();
-		return true;
-    }
     public void displaylist_regenerate_items()
     {
     	this.require_generate_displaylist.add(1);
-    }
-    public void displaylist_regenerate_objects()
-    {
-    	this.require_generate_displaylist.add(4);
     }
 	public void add_Objects(int x_map2, int y_map2, int item_id)
 	{	
@@ -549,12 +494,6 @@ public class chunk {
 		System.out.println("add trees-> x:"+ x +" y: "+y);
 		casilla[x_map2][y_map2].add_Tree(item_id);
 		this.require_generate_displaylist.add(2);
-	}
-	public void add_Item(int x_map2, int y_map2, int item_id)
-	{
-		System.out.println("add Stone-> x:"+ x +" y: "+y);
-		casilla[x_map2][y_map2].add_Item(item_id);
-		this.require_generate_displaylist.add(4);
 	}
 	public boolean get_blocked(int temp_x_map, int temp_y_map)
 	{
@@ -654,5 +593,9 @@ public class chunk {
 		casilla[x_map][y_map].add_wall(i);
 		this.require_generate_displaylist.add(3);
 		
+	}
+	public List<Integer> get_Object_slot(int x2, int y2, int position) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

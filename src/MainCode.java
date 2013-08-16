@@ -73,7 +73,7 @@ public class MainCode {
     /** is VSync Enabled */
     boolean vsync;
     private int bag_auv;
-    private int[] gridtiles = {0,0};
+    private int[] gridtiles = {0,0,0};
     private int texture_player;
     private int texture_items;
     private int texture_fires;
@@ -96,6 +96,7 @@ public class MainCode {
         
         gridtiles[0] = setupTextures("assets/stGrid1.png");
         gridtiles[1] = setupTextures("assets/itemsgrid.png");
+        gridtiles[2] = setupTextures("assets/treesgrid.png");
         //bag_auv = setupTextures("src/bag_auv.png");
         texture_player = setupTextures("assets/player.png");
         texture_items = setupTextures("assets/items.png");
@@ -1421,16 +1422,6 @@ public class MainCode {
 		          temp ++;
 		        }
 	    	}
-    	}
-    	else
-    	{	
-    		int value = mapa_temporal[chunk_x][chunk_y].get_Item(x,y);	
-    		
-	          if (player.pick_item(value) == true)
-	          {
-	        	  mapa_temporal[chunk_x][chunk_y].get_Item_remove(x,y);
-	        	  mapa_temporal[chunk_x][chunk_y].displaylist_regenerate_objects();
-	          }
     	}
     }
     private void dropObject(int x_map2, int y_map2, int item_id)
